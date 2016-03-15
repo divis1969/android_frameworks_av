@@ -2134,7 +2134,7 @@ sp<AudioFlinger::RecordThread> AudioFlinger::openInput_l(audio_module_handle_t m
     if (status == BAD_VALUE &&
         audio_is_linear_pcm(config->format) &&
         audio_is_linear_pcm(halconfig.format) &&
-        (halconfig.sample_rate >= AUDIO_RESAMPLER_DOWN_RATIO_MAX * config->sample_rate) &&
+        /* (halconfig.sample_rate >= 2 * config->sample_rate) && */
         (audio_channel_count_from_in_mask(halconfig.channel_mask) <= FCC_2) &&
         (audio_channel_count_from_in_mask(config->channel_mask) <= FCC_2)) {
         // FIXME describe the change proposed by HAL (save old values so we can log them here)
