@@ -258,6 +258,9 @@ public:
 
     /* Get the HW synchronization source used for an audio session */
     virtual audio_hw_sync_t getAudioHwSyncForSession(audio_session_t sessionId) = 0;
+
+    virtual status_t getAudioData(int par, unsigned long size, char * buffer) = 0;
+    virtual status_t setAudioData(int par, unsigned long size, char * buffer) = 0;
 };
 
 
