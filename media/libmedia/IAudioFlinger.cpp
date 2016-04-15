@@ -81,7 +81,9 @@ enum {
     LIST_AUDIO_PATCHES,
     SET_AUDIO_PORT_CONFIG,
     GET_AUDIO_HW_SYNC,
-    SYSTEM_READY
+    SYSTEM_READY,
+    GET_AUDIO_DATA,
+    SET_AUDIO_DATA,
 };
 
 #define MAX_ITEMS_PER_LIST 1024
@@ -910,6 +912,44 @@ public:
         data.writeInterfaceToken(IAudioFlinger::getInterfaceDescriptor());
         return remote()->transact(SYSTEM_READY, data, &reply, IBinder::FLAG_ONEWAY);
     }
+
+    virtual status_t getAudioData(int par, unsigned long size, char * buffer)
+    {
+        ALOGV("getAudioData: %d, %d, %p", par, size, buffer);
+        if (buffer == NULL || size == 0) {
+            return BAD_VALUE;
+        }
+        Parcel data, reply;
+        data.writeInterfaceToken(IAudioFlinger::getInterfaceDescriptor());
+        data.writeInt32(par);
+        data.writeInt32(size);
+        data.write(buffer, size);
+        status_t status = remote()->transact(GET_AUDIO_DATA, data, &reply);
+        if (status != NO_ERROR ||
+                (status = (status_t)reply.readInt32()) != NO_ERROR) {
+            return status;
+        }
+        reply.read(buffer, size);
+        return status;
+    }
+
+    virtual status_t setAudioData(int par, unsigned long size, char * buffer)
+    {
+        ALOGV("setAudioData: %d, %d, %p", par, size, buffer);
+        if (buffer == NULL || size == 0) {
+            return BAD_VALUE;
+        }
+        Parcel data, reply;
+        data.writeInterfaceToken(IAudioFlinger::getInterfaceDescriptor());
+        data.writeInt32(par);
+        data.writeInt32(size);
+        data.write(buffer, size);
+        status_t status = remote()->transact(SET_AUDIO_DATA, data, &reply);
+        if (status == NO_ERROR) {
+            status = (status_t)reply.readInt32();
+        }
+        return status;
+    }
 };
 
 IMPLEMENT_META_INTERFACE(AudioFlinger, "android.media.IAudioFlinger");
@@ -1416,6 +1456,42 @@ status_t BnAudioFlinger::onTransact(
         case SYSTEM_READY: {
             CHECK_INTERFACE(IAudioFlinger, data, reply);
             systemReady();
+            return NO_ERROR;
+        } break;
+        case GET_AUDIO_DATA: {
+            CHECK_INTERFACE(IAudioFlinger, data, reply);
+            int par = data.readInt32();
+            unsigned long size = data.readInt32();
+            ALOGV("GET_AUDIO_DATA: %d, %d", par, size);
+            char * buffer = (char*)calloc(size, 1);
+            if (buffer == NULL) {
+                reply->writeInt32(NO_MEMORY);
+                reply->writeInt32(0);
+                return NO_ERROR;
+            }
+            status_t status = getAudioData(par, size, buffer);
+            reply->writeInt32(status);
+            if (status == NO_ERROR) {
+                reply->write(buffer, size);
+            }
+            free(buffer);
+            return NO_ERROR;
+        } break;
+        case SET_AUDIO_DATA: {
+            CHECK_INTERFACE(IAudioFlinger, data, reply);
+            int par = data.readInt32();
+            unsigned long size = data.readInt32();
+            ALOGV("SET_AUDIO_DATA: %d, %d", par, size);
+            char * buffer = (char*)calloc(size, 1);
+            if (buffer == NULL) {
+                reply->writeInt32(NO_MEMORY);
+                reply->writeInt32(0);
+                return NO_ERROR;
+            }
+            data.read(buffer, size);
+            status_t status = setAudioData(par, size, buffer);
+            reply->writeInt32(status);
+            free(buffer);
             return NO_ERROR;
         } break;
         default:

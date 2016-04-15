@@ -246,6 +246,9 @@ public:
 
     /* Indicate JAVA services are ready (scheduling, power management ...) */
     virtual status_t systemReady() = 0;
+
+    virtual status_t getAudioData(int par, unsigned long size, char * buffer) = 0;
+    virtual status_t setAudioData(int par, unsigned long size, char * buffer) = 0;
 };
 
 

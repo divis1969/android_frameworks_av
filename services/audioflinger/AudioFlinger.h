@@ -266,6 +266,9 @@ public:
     /* Indicate JAVA services are ready (scheduling, power management ...) */
     virtual status_t systemReady();
 
+    virtual status_t getAudioData(int par, unsigned long size, char * buffer);
+    virtual status_t setAudioData(int par, unsigned long size, char * buffer);
+
     virtual     status_t    onTransact(
                                 uint32_t code,
                                 const Parcel& data,

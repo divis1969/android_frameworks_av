@@ -325,6 +325,9 @@ public:
     static status_t listAudioSessions(audio_stream_type_t streams,
                                       Vector< sp<AudioSessionInfo>> &sessions);
 
+    static status_t getAudioData(int par, unsigned long size, char * buffer);
+    static status_t setAudioData(int par, unsigned long size, char * buffer);
+
     // ----------------------------------------------------------------------------
 
     class AudioPortCallback : public RefBase
