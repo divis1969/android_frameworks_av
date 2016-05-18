@@ -915,7 +915,7 @@ public:
 
     virtual status_t getAudioData(int par, unsigned long size, char * buffer)
     {
-        ALOGV("getAudioData: %d, %d, %p", par, size, buffer);
+        ALOGV("getAudioData: %d, %lu, %p", par, size, buffer);
         if (buffer == NULL || size == 0) {
             return BAD_VALUE;
         }
@@ -935,7 +935,7 @@ public:
 
     virtual status_t setAudioData(int par, unsigned long size, char * buffer)
     {
-        ALOGV("setAudioData: %d, %d, %p", par, size, buffer);
+        ALOGV("setAudioData: %d, %lu, %p", par, size, buffer);
         if (buffer == NULL || size == 0) {
             return BAD_VALUE;
         }
@@ -1462,7 +1462,7 @@ status_t BnAudioFlinger::onTransact(
             CHECK_INTERFACE(IAudioFlinger, data, reply);
             int par = data.readInt32();
             unsigned long size = data.readInt32();
-            ALOGV("GET_AUDIO_DATA: %d, %d", par, size);
+            ALOGV("GET_AUDIO_DATA: %d, %lu", par, size);
             char * buffer = (char*)calloc(size, 1);
             if (buffer == NULL) {
                 reply->writeInt32(NO_MEMORY);
@@ -1481,7 +1481,7 @@ status_t BnAudioFlinger::onTransact(
             CHECK_INTERFACE(IAudioFlinger, data, reply);
             int par = data.readInt32();
             unsigned long size = data.readInt32();
-            ALOGV("SET_AUDIO_DATA: %d, %d", par, size);
+            ALOGV("SET_AUDIO_DATA: %d, %lu", par, size);
             char * buffer = (char*)calloc(size, 1);
             if (buffer == NULL) {
                 reply->writeInt32(NO_MEMORY);
