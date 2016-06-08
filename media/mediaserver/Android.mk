@@ -26,7 +26,8 @@ LOCAL_SHARED_LIBRARIES := \
 	libutils \
 	liblog \
 	libbinder \
-	libsoundtriggerservice
+	libsoundtriggerservice \
+	libmeizucamera
 
 LOCAL_STATIC_LIBRARIES := \
 	libregistermsext

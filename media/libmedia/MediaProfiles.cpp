@@ -107,6 +107,8 @@ const MediaProfiles::NameToTagMap MediaProfiles::sCamcorderQualityNameMap[] = {
     {"hevc1080p", CAMCORDER_QUALITY_HEVC1080P},
     {"hevc4kuhd",CAMCORDER_QUALITY_HEVC4kUHD},
     {"hevc4kdci",CAMCORDER_QUALITY_HEVC4kDCI},
+
+    {"slowmotion720p", CAMCORDER_QUALITY_SLOW_MOTION_VGA},
 };
 
 #if LOG_NDEBUG
@@ -516,8 +518,9 @@ static bool isTimelapseProfile(camcorder_quality quality) {
 }
 
 static bool isHighSpeedProfile(camcorder_quality quality) {
-    return quality >= CAMCORDER_QUALITY_HIGH_SPEED_LIST_START &&
-           quality <= CAMCORDER_QUALITY_HIGH_SPEED_LIST_END;
+    return (quality >= CAMCORDER_QUALITY_HIGH_SPEED_LIST_START &&
+           quality <= CAMCORDER_QUALITY_HIGH_SPEED_LIST_END) ||
+           quality == CAMCORDER_QUALITY_SLOW_MOTION_VGA;
 }
 
 void MediaProfiles::initRequiredProfileRefs(const Vector<int>& cameraIds) {

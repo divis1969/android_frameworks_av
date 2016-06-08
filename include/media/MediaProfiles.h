@@ -71,6 +71,8 @@ enum camcorder_quality {
     CAMCORDER_QUALITY_HIGH_SPEED_1080P = 2004,
     CAMCORDER_QUALITY_HIGH_SPEED_2160P = 2005,
     CAMCORDER_QUALITY_HIGH_SPEED_LIST_END = 2005,
+
+	CAMCORDER_QUALITY_SLOW_MOTION_VGA = 2231,
 };
 /**
  * Set CIF as default maximum import and export resolution of video editor.

@@ -31,6 +31,7 @@
 // from LOCAL_C_INCLUDES
 #include "AudioFlinger.h"
 #include "CameraService.h"
+#include "MZCameraService.h"
 #include "MediaLogService.h"
 #include "MediaPlayerService.h"
 #include "AudioPolicyService.h"
@@ -131,6 +132,7 @@ int main(int argc __unused, char** argv)
         AudioFlinger::instantiate();
         MediaPlayerService::instantiate();
         CameraService::instantiate();
+        sm->addService(String16("meizu.camera"), new meizu::camera::MZCameraService());
 #ifdef AUDIO_LISTEN_ENABLED
         ALOGI("ListenService instantiated");
         ListenService::instantiate();
