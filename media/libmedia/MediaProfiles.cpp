@@ -80,6 +80,7 @@ const MediaProfiles::NameToTagMap MediaProfiles::sCamcorderQualityNameMap[] = {
     {"fwvga", CAMCORDER_QUALITY_FWVGA},
     {"4kdci",CAMCORDER_QUALITY_4kDCI},
     {"hvga",CAMCORDER_QUALITY_HVGA},
+    {"meizu_vga",CAMCORDER_QUALITY_MEIZU_VGA},
 
     {"timelapselow",  CAMCORDER_QUALITY_TIME_LAPSE_LOW},
     {"timelapsehigh", CAMCORDER_QUALITY_TIME_LAPSE_HIGH},
