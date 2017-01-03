@@ -39,6 +39,7 @@
 #include <media/stagefright/Utils.h>
 #include <stagefright/AVExtensions.h>
 #include <OMX_Core.h>
+#include <cutils/properties.h>
 
 namespace android {
 
@@ -770,8 +771,14 @@ status_t MediaCodecSource::onStart(MetaData *params) {
     status_t err = OK;
 
     if (mFlags & FLAG_USE_SURFACE_INPUT) {
+        auto key = kKeyTime;
+        if (property_get_bool("persist.camera.HAL3.enabled", true) &&
+             !property_get_bool("media.camera.ts.monotonic", true)) {
+            key = kKeyTimeBoot;
+        }
+
         int64_t startTimeUs;
-        if (!params || !params->findInt64(kKeyTime, &startTimeUs)) {
+        if (!params || !params->findInt64(key, &startTimeUs)) {
             startTimeUs = -1ll;
         }
         resume(startTimeUs);
@@ -877,8 +884,9 @@ void MediaCodecSource::onMessageReceived(const sp<AMessage> &msg) {
             }
 
             MediaBuffer *mbuf = new MediaBuffer(outbuf->size());
+            mbuf->setObserver(this);
             mbuf->add_ref();
-            
+
             sp<MetaData> meta = mbuf->meta_data();
             AVUtils::get()->setDeferRelease(meta);
 
@@ -932,7 +940,6 @@ void MediaCodecSource::onMessageReceived(const sp<AMessage> &msg) {
                 mbuf->meta_data()->setInt32(kKeyIsSyncFrame, true);
             }
             memcpy(mbuf->data(), outbuf->data(), outbuf->size());
-            mbuf->setObserver(this);
 
             {
                 Mutexed<Output>::Locked output(mOutput);

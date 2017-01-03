@@ -435,7 +435,7 @@ bool OMXNodeInstance::isProhibitedIndex_l(OMX_INDEXTYPE index) {
             || (index > (OMX_INDEXTYPE)OMX_IndexExtAudioStartUnused
                     && index <= (OMX_INDEXTYPE)OMX_IndexParamAudioProfileQuerySupported)
             || (index > (OMX_INDEXTYPE)OMX_IndexExtVideoStartUnused
-                    && index <= (OMX_INDEXTYPE)OMX_IndexConfigAndroidIntraRefresh)
+                    && index <= (OMX_INDEXTYPE)OMX_IndexConfigAndroidVideoTemporalLayering)
             || (index > (OMX_INDEXTYPE)OMX_IndexExtOtherStartUnused
                     && index <= (OMX_INDEXTYPE)OMX_IndexParamConsumerUsageBits)) {
         return false;
@@ -799,7 +799,11 @@ status_t OMXNodeInstance::useBuffer(
     // metadata buffers are not connected cross process
     // use a backup buffer instead of the actual buffer
     BufferMeta *buffer_meta;
+#ifdef CAMCORDER_GRALLOC_SOURCE
+    bool useBackup = false;
+#else
     bool useBackup = mMetadataType[portIndex] != kMetadataBufferTypeInvalid;
+#endif
     OMX_U8 *data = static_cast<OMX_U8 *>(params->pointer());
     // allocate backup buffer
     if (useBackup) {
@@ -1223,6 +1227,12 @@ status_t OMXNodeInstance::allocateSecureBuffer(
         void **buffer_data, sp<NativeHandle> *native_handle) {
     if (buffer == NULL || buffer_data == NULL || native_handle == NULL) {
         ALOGE("b/25884056 %d", __LINE__);
+        return BAD_VALUE;
+    }
+
+    if (portIndex >= NELEM(mSecureBufferType)) {
+        ALOGE("b/31385713, portIndex(%u)", portIndex);
+        android_errorWriteLog(0x534e4554, "31385713");
         return BAD_VALUE;
     }
 

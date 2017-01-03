@@ -73,6 +73,7 @@ enum {
     kKeyIsSyncFrame       = 'sync',  // int32_t (bool)
     kKeyIsCodecConfig     = 'conf',  // int32_t (bool)
     kKeyTime              = 'time',  // int64_t (usecs)
+    kKeyTimeBoot          = 'timb',  // int64_t (usecs)
     kKeyDecodingTime      = 'decT',  // int64_t (decoding timestamp in usecs)
     kKeyNTPTime           = 'ntpT',  // uint64_t (ntp-timestamp)
     kKeyTargetTime        = 'tarT',  // int64_t (usecs)
@@ -281,14 +282,6 @@ public:
         TYPE_FLOAT    = 'floa',
         TYPE_POINTER  = 'ptr ',
         TYPE_RECT     = 'rect',
-    };
-
-    static const size_t kSharedMemThreshold = 10 * 1024;
-
-    enum ParcelAllocationType {
-        NULL_ALLOCATION,
-        SHARED_ALLOCATION,
-        INLINE_ALLOCATION
     };
 
     void clear();
