@@ -75,12 +75,12 @@ Gains::sSpeakerSonificationVolumeCurveDrc[Volume::VOLCNT] = {
 
 const VolumeCurvePoint
 Gains::sDefaultSystemVolumeCurve[Volume::VOLCNT] = {
-    {1, -24.0f}, {33, -18.0f}, {66, -12.0f}, {100, -6.0f}
+    {1, -24.0f}, {33, -18.0f}, {66, -12.0f}, {100, 0.0f}
 };
 
 const VolumeCurvePoint
 Gains::sDefaultSystemVolumeCurveDrc[Volume::VOLCNT] = {
-    {1, -34.0f}, {33, -24.0f}, {66, -15.0f}, {100, -6.0f}
+    {1, -34.0f}, {33, -24.0f}, {66, -15.0f}, {100, 0.0f}
 };
 
 const VolumeCurvePoint
