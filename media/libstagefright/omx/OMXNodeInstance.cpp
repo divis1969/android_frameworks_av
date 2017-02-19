@@ -435,7 +435,7 @@ bool OMXNodeInstance::isProhibitedIndex_l(OMX_INDEXTYPE index) {
             || (index > (OMX_INDEXTYPE)OMX_IndexExtAudioStartUnused
                     && index <= (OMX_INDEXTYPE)OMX_IndexParamAudioProfileQuerySupported)
             || (index > (OMX_INDEXTYPE)OMX_IndexExtVideoStartUnused
-                    && index <= (OMX_INDEXTYPE)OMX_IndexConfigAndroidVideoTemporalLayering)
+                    && index <= (OMX_INDEXTYPE)OMX_IndexConfigAndroidIntraRefresh)
             || (index > (OMX_INDEXTYPE)OMX_IndexExtOtherStartUnused
                     && index <= (OMX_INDEXTYPE)OMX_IndexParamConsumerUsageBits)) {
         return false;
@@ -812,13 +812,6 @@ status_t OMXNodeInstance::useBuffer(
             return NO_MEMORY;
         }
         memset(data, 0, allottedSize);
-
-        // if we are not connecting the buffers, the sizes must match
-        if (allottedSize != params->size()) {
-            CLOG_ERROR(useBuffer, BAD_VALUE, SIMPLE_BUFFER(portIndex, (size_t)allottedSize, data));
-            delete[] data;
-            return BAD_VALUE;
-        }
 
         buffer_meta = new BufferMeta(
                 params, portIndex, false /* copyToOmx */, false /* copyFromOmx */, data);
@@ -1227,12 +1220,6 @@ status_t OMXNodeInstance::allocateSecureBuffer(
         void **buffer_data, sp<NativeHandle> *native_handle) {
     if (buffer == NULL || buffer_data == NULL || native_handle == NULL) {
         ALOGE("b/25884056 %d", __LINE__);
-        return BAD_VALUE;
-    }
-
-    if (portIndex >= NELEM(mSecureBufferType)) {
-        ALOGE("b/31385713, portIndex(%u)", portIndex);
-        android_errorWriteLog(0x534e4554, "31385713");
         return BAD_VALUE;
     }
 
